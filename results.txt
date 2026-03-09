@@ -1,0 +1,91 @@
+============================================================
+ DS-FTP Performance Results (Avg of 3 runs)
+============================================================
+
+------------------------------------------------------------
+ File: Small (<4KB)
+------------------------------------------------------------
+
+ Protocol: Stop-and-Wait | RN=0
+  Run 1: 0.01s [PASS]
+  Run 2: 0.01s [PASS]
+  Run 3: 0.00s [PASS]
+  --> Average: 0s | Integrity: PASS
+
+ Protocol: Stop-and-Wait | RN=5
+  Run 1: 4.02s [FAIL]
+  Run 2: 4.03s [FAIL]
+  Run 3: 4.01s [FAIL]
+  --> Average: 4.02s | Integrity: FAIL
+
+ Protocol: Stop-and-Wait | RN=100
+  Run 1: 0.01s [PASS]
+  Run 2: 0.01s [PASS]
+  Run 3: 0.01s [PASS]
+  --> Average: .01s | Integrity: PASS
+
+ Protocol: GBN window=20 | RN=0
+  Run 1: 0.00s [FAIL]
+  Run 2: 0.00s [FAIL]
+  Run 3: 0.00s [FAIL]
+  --> Average: 0s | Integrity: FAIL
+
+ Protocol: GBN window=20 | RN=5
+  Run 1: 0.00s [FAIL]
+  Run 2: 0.00s [FAIL]
+  Run 3: 0.00s [FAIL]
+  --> Average: 0s | Integrity: FAIL
+
+ Protocol: GBN window=20 | RN=100
+  Run 1: 0.00s [FAIL]
+  Run 2: 0.00s [FAIL]
+  Run 3: 0.00s [FAIL]
+  --> Average: 0s | Integrity: FAIL
+
+ Protocol: GBN window=40 | RN=0
+  Run 1: 0.00s [FAIL]
+  Run 2: 0.00s [FAIL]
+  Run 3: 0.00s [FAIL]
+  --> Average: 0s | Integrity: FAIL
+
+ Protocol: GBN window=40 | RN=5
+  Run 1: 0.00s [FAIL]
+  Run 2: 0.00s [FAIL]
+  Run 3: 0.00s [FAIL]
+  --> Average: 0s | Integrity: FAIL
+
+ Protocol: GBN window=40 | RN=100
+  Run 1: 0.00s [FAIL]
+  Run 2: 0.00s [FAIL]
+  Run 3: 0.00s [FAIL]
+  --> Average: 0s | Integrity: FAIL
+
+ Protocol: GBN window=80 | RN=0
+  Run 1: 0.00s [FAIL]
+  Run 2: 0.00s [FAIL]
+  Run 3: 0.01s [FAIL]
+  --> Average: 0s | Integrity: FAIL
+
+ Protocol: GBN window=80 | RN=5
+  Run 1: 0.00s [FAIL]
+  Run 2: 0.00s [FAIL]
+  Run 3: 0.00s [FAIL]
+  --> Average: 0s | Integrity: FAIL
+
+ Protocol: GBN window=80 | RN=100
+  Run 1: 0.00s [FAIL]
+  Run 2: 0.00s [FAIL]
+  Run 3: 0.00s [FAIL]
+  --> Average: 0s | Integrity: FAIL
+
+------------------------------------------------------------
+ File: Large (~512KB)
+------------------------------------------------------------
+
+ Protocol: Stop-and-Wait | RN=0
+  Run 1: 0.23s [PASS]
+  Run 2: 0.23s [PASS]
+  Run 3: 0.23s [PASS]
+  --> Average: .23s | Integrity: PASS
+
+ Protocol: Stop-and-Wait | RN=5
