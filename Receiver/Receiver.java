@@ -57,7 +57,7 @@ public class Receiver {
 
                 ackCounter++;
 
-                boolean shouldDrop = (rn > 0 && ackCounter % rn == 0);
+                boolean shouldDrop = (ChaosEngine.shouldDrop(ackCounter, rn));
                 if (shouldDrop) {
                     System.out.println("!!! RN Triggered: Dropping ACK for Seq " + seqNum);
                 } else {
