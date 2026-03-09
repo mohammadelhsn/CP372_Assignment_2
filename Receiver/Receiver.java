@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Receiver {
     public static void main(String[] args) {
@@ -21,8 +23,9 @@ public class Receiver {
 
         int ackCounter = 0;
         byte[] receiverBuffer = new byte[DSPacket.MAX_PACKET_SIZE];
-       int expect_seq = 1;
-
+        int expect_seq = 1;
+        Map<Integer, byte[]> buffer = new HashMap<>();
+        
         try {
             DatagramSocket socket = new DatagramSocket(dataPort);
             FileOutputStream outputFileStream = new FileOutputStream(outputFile);
@@ -40,14 +43,19 @@ public class Receiver {
                     System.out.println("Received SOT seq=" + seqNum);
 
                 }else if (type == DSPacket.TYPE_DATA) {
-                    if(seqNum == expect_seq){
-                        outputFileStream.write(dsPacket.getPayload());
-                        System.out.println("Received DATA Seq: " + seqNum);
-                        expect_seq= (expect_seq +1) % 128;
+                    if (!buffer.containsKey(seqNum)) {
+                      buffer.put(seqNum, dsPacket.getPayload());
+                      System.out.println("Buffered DATA seq=" + seqNum);
+                   }
 
-                    }else{
-                         System.out.println("Ignoring duplicate/out-of-order seq=" + seqNum + " (expected=" + expect_seq + ")");
-                    }
+                   while (buffer.containsKey(expect_seq)) {
+                       outputFileStream.write(buffer.get(expect_seq));
+                       System.out.println("Delivered DATA seq=" + expect_seq);
+                       buffer.remove(expect_seq);
+                        expect_seq = (expect_seq + 1) % 128;
+                 }
+
+                 seqNum = (expect_seq - 1 + 128) % 128;
               
                 } else if (type == DSPacket.TYPE_EOT) {
                     System.out.println("Received EOT. Wrapping up...");
