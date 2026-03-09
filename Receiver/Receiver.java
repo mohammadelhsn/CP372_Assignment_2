@@ -43,8 +43,16 @@ public class Receiver {
                 } else if (type == DSPacket.TYPE_EOT) {
                     System.out.println("Received EOT. Wrapping up...");
                     running = false;
+                    DSPacket ack = new DSPacket(DSPacket.TYPE_ACK, seqNum, null);
+                    byte[] ackBytes = ack.toBytes();
+
+                    DatagramPacket ackDatagram = new DatagramPacket(ackBytes, ackBytes.length, senderAddress,
+                            sender_port);
+                    socket.send(ackDatagram);
+                    System.out.println("Sent ACK for Seq: " + seqNum);
                     outputFileStream.close();
                     socket.close();
+                    return;
                 }
 
                 ackCounter++;
