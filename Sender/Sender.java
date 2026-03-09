@@ -132,12 +132,11 @@ public class Sender {
                 if (ack.getType() == DSPacket.TYPE_ACK) {
                     int ackedSeq = ack.getSeqNum();
                     System.out.println("ACK received seq=" + ackedSeq);
-                    // Search forward from base to find the ACKed packet
-                // then advance base past it
+
                 for (int i = base; i < packets.size(); i++) {
                     if (packets.get(i).getSeqNum() == ackedSeq) {
-                        base = i + 1; // move past the ACKed packet
-                        timeoutCtr = 0; // reset because progress was made
+                        base = i + 1;
+                        timeoutCtr = 0; 
                         break;
                     }
                 }
