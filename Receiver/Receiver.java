@@ -21,6 +21,7 @@ public class Receiver {
 
         int ackCounter = 0;
         byte[] receiverBuffer = new byte[DSPacket.MAX_PACKET_SIZE];
+       int expect_seq = 1;
 
         try {
             DatagramSocket socket = new DatagramSocket(dataPort);
@@ -35,24 +36,22 @@ public class Receiver {
                 byte type = dsPacket.getType();
                 int seqNum = dsPacket.getSeqNum();
 
-                if (type == DSPacket.TYPE_DATA) {
-                    outputFileStream.write(dsPacket.getPayload());
-                    System.out.println("Received DATA Seq: " + seqNum);
-                } else if (type == DSPacket.TYPE_SOT) {
-                    System.out.println("Received SOT. Starting transfer...");
+                if (type == DSPacket.TYPE_SOT){
+                    System.out.println("Received SOT seq=" + seqNum);
+
+                }else if (type == DSPacket.TYPE_DATA) {
+                    if(seqNum == expect_seq){
+                        outputFileStream.write(dsPacket.getPayload());
+                        System.out.println("Received DATA Seq: " + seqNum);
+                        expect_seq= (expect_seq +1) % 128;
+
+                    }else{
+                         System.out.println("Ignoring duplicate/out-of-order seq=" + seqNum + " (expected=" + expect_seq + ")");
+                    }
+              
                 } else if (type == DSPacket.TYPE_EOT) {
                     System.out.println("Received EOT. Wrapping up...");
                     running = false;
-                    DSPacket ack = new DSPacket(DSPacket.TYPE_ACK, seqNum, null);
-                    byte[] ackBytes = ack.toBytes();
-
-                    DatagramPacket ackDatagram = new DatagramPacket(ackBytes, ackBytes.length, senderAddress,
-                            sender_port);
-                    socket.send(ackDatagram);
-                    System.out.println("Sent ACK for Seq: " + seqNum);
-                    outputFileStream.close();
-                    socket.close();
-                    return;
                 }
 
                 ackCounter++;
@@ -70,6 +69,12 @@ public class Receiver {
                     System.out.println("Sent ACK for Seq: " + seqNum);
                 }
                 System.out.println("Transfer complete. File saved to " + outputFile);
+
+                if(!running){ 
+                    outputFileStream.close();
+                    socket.close();
+                    System.out.println("Transfer complete. File saved to " + outputFile);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
